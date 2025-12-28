@@ -1,6 +1,7 @@
 ﻿using GitRepositoriesClone.API.Data;
 using GitRepositoriesClone.API.Data.Dtos;
 using GitRepositoriesClone.API.Models;
+using GitRepositoriesClone.API.Repositories;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -11,11 +12,11 @@ namespace GitRepositoriesClone.API.Controllers
     [ApiController]
     public class RepositoriesController : ControllerBase
     {
-        private readonly AppDbContext _context;
+        private readonly IRepositoryRepository _repository;
 
-        public RepositoriesController(AppDbContext context)
+        public RepositoriesController(IRepositoryRepository repository)
         {
-            _context = context;
+            _repository = repository;
         }
 
         //CREATE
@@ -29,8 +30,7 @@ namespace GitRepositoriesClone.API.Controllers
           
             };
 
-            _context.Repositories.Add(repository);
-            await _context.SaveChangesAsync();
+            await _repository.AddAsync(repository);
 
             return CreatedAtAction(nameof(GetById), new { id = repository.Id }, repository);
         }  
@@ -39,7 +39,7 @@ namespace GitRepositoriesClone.API.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
-            var repositories = await _context.Repositories.ToListAsync();
+            var repositories = await _repository.GetAllAsync();
             return Ok(repositories);
         }
 
@@ -47,9 +47,9 @@ namespace GitRepositoriesClone.API.Controllers
         [HttpGet("{id:guid}")]
         public async Task<IActionResult> GetById(Guid id)
         {
-            var repository = await _context.Repositories.FindAsync(id);
+            var repository = await _repository.GetByIdAsync(id);
 
-            if(repository == null)
+            if (repository == null)
             {
                 return NotFound();
             }
@@ -61,9 +61,9 @@ namespace GitRepositoriesClone.API.Controllers
         [HttpPut]
         public async Task<IActionResult> Update(Guid id , UpdateRepositoryRequest request)
         {
-            var repository = await _context.Repositories.FindAsync(id);
+            var repository = await _repository.GetByIdAsync(id);
 
-            if(repository == null)
+            if (repository == null)
             {
                 return NotFound();
             }
@@ -71,7 +71,7 @@ namespace GitRepositoriesClone.API.Controllers
             repository.Name = request.Name;
             repository.Description = request.Description;
 
-            await _context.SaveChangesAsync();
+            await _repository.UpdateAsync(repository);
             return Ok(repository);
         }
 
@@ -79,16 +79,15 @@ namespace GitRepositoriesClone.API.Controllers
         [HttpDelete]
         public async Task<IActionResult> Delete(Guid id)
         {
-            var repository = await _context.Repositories.FindAsync(id);
+            var repository = await _repository.GetByIdAsync(id);
 
-            if(repository == null)
+            if (repository == null)
             {
                 return NotFound();
             }
 
 
-            _context.Repositories.Remove(repository);
-            await _context.SaveChangesAsync();
+            await _repository.DeleteAsync(repository);
             return NoContent();
 
         }
