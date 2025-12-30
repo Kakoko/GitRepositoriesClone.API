@@ -1,5 +1,6 @@
 using GitRepositoriesClone.API.Data;
 using GitRepositoriesClone.API.Repositories;
+using GitRepositoriesClone.API.Services;
 using Microsoft.EntityFrameworkCore;
 using Scalar.AspNetCore;
 
@@ -9,6 +10,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlite("Data Source = githubclone.db"));
 builder.Services.AddScoped<IRepositoryRepository,RepositoryRepository>();
 builder.Services.AddScoped(typeof(IGenericRepository<>) , typeof(GenericRepository<>));
+builder.Services.AddScoped<IRepositoryService, RepositoryService>();
+
 
 builder.Services.AddControllers();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
