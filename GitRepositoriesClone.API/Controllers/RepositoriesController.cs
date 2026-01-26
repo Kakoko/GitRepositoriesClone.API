@@ -21,8 +21,15 @@ namespace GitRepositoriesClone.API.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(CreateRepositoryRequest request)
         {
-            var repository = await _service.CreateAsync(request);
-            return CreatedAtAction(nameof(GetById), new { id = repository.Id }, repository);
+            try
+            {
+                var repository = await _service.CreateAsync(request);
+                return CreatedAtAction(nameof(GetById), new { id = repository.Id }, repository);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }  
 
         //READ (All)
@@ -51,14 +58,19 @@ namespace GitRepositoriesClone.API.Controllers
         [HttpPut]
         public async Task<IActionResult> Update(Guid id , UpdateRepositoryRequest request)
         {
-            var repository = await _service.UpdateAsync(id, request);
-
-            if (repository == null)
+            try
             {
-                return NotFound();
-            }
+                var repository = await _service.UpdateAsync(id, request);
 
-            return Ok(repository);
+                if (repository == null)
+                    return NotFound();
+
+                return Ok(repository);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         //DELETE

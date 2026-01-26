@@ -25,6 +25,18 @@ namespace GitRepositoriesClone.API.Services
 
         public async Task<Repository> CreateAsync(CreateRepositoryRequest request)
         {
+
+            if (string.IsNullOrWhiteSpace(request.Name))
+                throw new ArgumentException("Repository name is required.");
+
+            if (request.Name.Length > 100)
+                throw new ArgumentException("Repository name must not exceed 100 characters.");
+
+            if (!string.IsNullOrWhiteSpace(request.Description) &&
+                request.Description.Length > 500)
+                throw new ArgumentException("Description must not exceed 500 characters.");
+
+
             var repository = new Repository
             {
                 Name = request.Name,
@@ -41,6 +53,18 @@ namespace GitRepositoriesClone.API.Services
 
             if (repository == null)
                 return null;
+
+
+            if (string.IsNullOrWhiteSpace(request.Name))
+                throw new ArgumentException("Repository name is required.");
+
+            if (request.Name.Length > 100)
+                throw new ArgumentException("Repository name must not exceed 100 characters.");
+
+            if (!string.IsNullOrWhiteSpace(request.Description) &&
+                request.Description.Length > 500)
+                throw new ArgumentException("Description must not exceed 500 characters.");
+
 
             repository.Name = request.Name;
             repository.Description = request.Description;
