@@ -26,16 +26,7 @@ namespace GitRepositoriesClone.API.Services
         public async Task<Repository> CreateAsync(CreateRepositoryRequest request)
         {
 
-            if (string.IsNullOrWhiteSpace(request.Name))
-                throw new ArgumentException("Repository name is required.");
-
-            if (request.Name.Length > 100)
-                throw new ArgumentException("Repository name must not exceed 100 characters.");
-
-            if (!string.IsNullOrWhiteSpace(request.Description) &&
-                request.Description.Length > 500)
-                throw new ArgumentException("Description must not exceed 500 characters.");
-
+            ValidateRepository(request.Name, request.Description);
 
             var repository = new Repository
             {
@@ -55,15 +46,7 @@ namespace GitRepositoriesClone.API.Services
                 return null;
 
 
-            if (string.IsNullOrWhiteSpace(request.Name))
-                throw new ArgumentException("Repository name is required.");
-
-            if (request.Name.Length > 100)
-                throw new ArgumentException("Repository name must not exceed 100 characters.");
-
-            if (!string.IsNullOrWhiteSpace(request.Description) &&
-                request.Description.Length > 500)
-                throw new ArgumentException("Description must not exceed 500 characters.");
+            ValidateRepository(request.Name, request.Description);
 
 
             repository.Name = request.Name;
@@ -82,6 +65,18 @@ namespace GitRepositoriesClone.API.Services
 
             await _repository.DeleteAsync(repository);
             return true;
+        }
+
+        private void ValidateRepository(string name, string? description)
+        {
+            if (string.IsNullOrWhiteSpace(name))
+                throw new ArgumentException("Repository name is required.");
+
+            if (name.Length > 100)
+                throw new ArgumentException("Repository name must not exceed 100 characters.");
+
+            if (!string.IsNullOrWhiteSpace(description) && description.Length > 500)
+                throw new ArgumentException("Description must not exceed 500 characters.");
         }
     }
 

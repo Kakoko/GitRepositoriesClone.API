@@ -1,4 +1,5 @@
 using GitRepositoriesClone.API.Data;
+using GitRepositoriesClone.API.Middleware;
 using GitRepositoriesClone.API.Repositories;
 using GitRepositoriesClone.API.Services;
 using Microsoft.EntityFrameworkCore;
@@ -18,6 +19,9 @@ builder.Services.AddControllers();
 builder.Services.AddOpenApi();
 
 var app = builder.Build();
+
+
+app.UseMiddleware<ExceptionMiddleware>();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
