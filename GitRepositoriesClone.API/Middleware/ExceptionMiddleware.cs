@@ -31,6 +31,17 @@ namespace GitRepositoriesClone.API.Middleware
                     error = ex.Message
                 });
             }
+            catch (FluentValidation.ValidationException ex)
+            {
+                context.Response.StatusCode = StatusCodes.Status400BadRequest;
+
+                var errors = ex.Errors.Select(e => e.ErrorMessage);
+
+                await context.Response.WriteAsJsonAsync(new
+                {
+                    errors = errors
+                });
+            }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Unhandled exception occurred");
