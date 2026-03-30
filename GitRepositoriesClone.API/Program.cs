@@ -1,7 +1,10 @@
+using FluentValidation;
 using GitRepositoriesClone.API.Data;
+using GitRepositoriesClone.API.Data.Dtos;
 using GitRepositoriesClone.API.Middleware;
 using GitRepositoriesClone.API.Repositories;
 using GitRepositoriesClone.API.Services;
+using GitRepositoriesClone.API.Validators;
 using Microsoft.EntityFrameworkCore;
 using Scalar.AspNetCore;
 
@@ -12,6 +15,8 @@ builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlite("Data S
 builder.Services.AddScoped<IRepositoryRepository,RepositoryRepository>();
 builder.Services.AddScoped(typeof(IGenericRepository<>) , typeof(GenericRepository<>));
 builder.Services.AddScoped<IRepositoryService, RepositoryService>();
+
+builder.Services.AddValidatorsFromAssemblyContaining<CreateRepositoryRequestValidator>();
 
 
 builder.Services.AddControllers();

@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using FluentValidation;
+using System.Net;
 
 namespace GitRepositoriesClone.API.Middleware
 {
@@ -30,6 +31,20 @@ namespace GitRepositoriesClone.API.Middleware
                 {
                     error = ex.Message
                 });
+            }
+            catch(ValidationException ex)
+            {
+                _logger.LogWarning(ex, "Fluent Validation error occurred");
+
+                context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+
+                var errors = ex.Errors.Select(e => e.ErrorMessage);
+
+                await context.Response.WriteAsJsonAsync(new
+                {
+                    error = errors
+                });
+
             }
             catch (Exception ex)
             {
