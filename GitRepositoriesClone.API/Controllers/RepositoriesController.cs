@@ -1,6 +1,9 @@
 ﻿using GitRepositoriesClone.API.Data.Dtos;
+using GitRepositoriesClone.API.Features.Repositories.Commands;
+using GitRepositoriesClone.API.Features.Repositories.Queries;
 using GitRepositoriesClone.API.Services;
 using Microsoft.AspNetCore.Mvc;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace GitRepositoriesClone.API.Controllers
 {
@@ -8,23 +11,29 @@ namespace GitRepositoriesClone.API.Controllers
     [ApiController]
     public class RepositoriesController : ControllerBase
     {
-     
         private readonly IRepositoryService _service;
+        private readonly CreateRepositoryHandler _createHandler;
+        private readonly GetAllRepositoriesHandler _getAllHandler;
 
-        public RepositoriesController(IRepositoryService service)
+        public RepositoriesController( IRepositoryService service,
+            CreateRepositoryHandler createHandler,
+            GetAllRepositoriesHandler getAllHandler)
         {
-            
             _service = service;
+            _createHandler = createHandler;
+            _getAllHandler = getAllHandler;
         }
 
         
         //CREATE
         [HttpPost]
-        public async Task<IActionResult> Create(CreateRepositoryRequest request)
+        public async Task<IActionResult> Create(CreateRepositoryCommand command)
         {
-            var repository = await _service.CreateAsync(request);
+            //var repository = await _service.CreateAsync(request);
 
-            return CreatedAtAction(nameof(GetById), new { id = repository.Id }, repository);
+            var result = await _createHandler.Handle(command);
+
+            return CreatedAtAction(nameof(GetById), new { id = result.Id }, result);
         }
 
 
@@ -32,8 +41,10 @@ namespace GitRepositoriesClone.API.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
-            var repositories = await _service.GetAllAsync();
-            return Ok(repositories);
+            //var repositories = await _service.GetAllAsync();
+
+            var result = await _getAllHandler.Handle();
+            return Ok(result);
         }
 
         //READ (by id)

@@ -1,6 +1,8 @@
 using FluentValidation;
 using GitRepositoriesClone.API.Data;
 using GitRepositoriesClone.API.Data.Dtos;
+using GitRepositoriesClone.API.Features.Repositories.Commands;
+using GitRepositoriesClone.API.Features.Repositories.Queries;
 using GitRepositoriesClone.API.Middleware;
 using GitRepositoriesClone.API.Repositories;
 using GitRepositoriesClone.API.Services;
@@ -18,6 +20,9 @@ builder.Services.AddScoped(typeof(IGenericRepository<>) , typeof(GenericReposito
 builder.Services.AddScoped<IRepositoryService, RepositoryService>();
 
 builder.Services.AddValidatorsFromAssemblyContaining<CreateRepositoryRequestValidator>();
+
+builder.Services.AddScoped<GetAllRepositoriesHandler>();
+builder.Services.AddScoped<CreateRepositoryHandler>();
 
 
 
