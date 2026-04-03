@@ -5,6 +5,7 @@ using GitRepositoriesClone.API.Middleware;
 using GitRepositoriesClone.API.Repositories;
 using GitRepositoriesClone.API.Services;
 using GitRepositoriesClone.API.Validators;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Scalar.AspNetCore;
 
@@ -16,6 +17,12 @@ builder.Services.AddScoped<IRepositoryRepository,RepositoryRepository>();
 builder.Services.AddScoped(typeof(IGenericRepository<>) , typeof(GenericRepository<>));
 builder.Services.AddScoped<IRepositoryService, RepositoryService>();
 
+builder.Services.AddValidatorsFromAssemblyContaining<CreateRepositoryRequestValidator>();
+
+
+
+
+//builder.Services.AddFluentValidationAutoValidation();
 builder.Services.AddValidatorsFromAssemblyContaining<CreateRepositoryRequestValidator>();
 
 

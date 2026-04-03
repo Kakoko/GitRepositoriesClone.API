@@ -32,19 +32,16 @@ namespace GitRepositoriesClone.API.Middleware
                     error = ex.Message
                 });
             }
-            catch(ValidationException ex)
+            catch (FluentValidation.ValidationException ex)
             {
-                _logger.LogWarning(ex, "Fluent Validation error occurred");
-
-                context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                context.Response.StatusCode = StatusCodes.Status400BadRequest;
 
                 var errors = ex.Errors.Select(e => e.ErrorMessage);
 
                 await context.Response.WriteAsJsonAsync(new
                 {
-                    error = errors
+                    errors = errors
                 });
-
             }
             catch (Exception ex)
             {

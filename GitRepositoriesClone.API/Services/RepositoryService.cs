@@ -10,11 +10,15 @@ namespace GitRepositoriesClone.API.Services
     {
         private readonly IRepositoryRepository _repository;
         private readonly IValidator<CreateRepositoryRequest> _createValidator;
+        private readonly IValidator<UpdateRepositoryRequest> _updateValidator;
 
-        public RepositoryService(IRepositoryRepository repository , IValidator<CreateRepositoryRequest> createValidator)
+        public RepositoryService(IRepositoryRepository repository, 
+            IValidator<CreateRepositoryRequest> createValidator,
+            IValidator<UpdateRepositoryRequest> updateValidator)
         {
             _repository = repository;
             _createValidator = createValidator;
+            _updateValidator = updateValidator;
         }
 
         public async Task<IEnumerable<Repository>> GetAllAsync()
@@ -31,7 +35,6 @@ namespace GitRepositoriesClone.API.Services
         {
 
             //RepositoryValidator.Validate(request.Name, request.Description);
-
             await _createValidator.ValidateAndThrowAsync(request);
 
             var repository = new Repository
@@ -52,7 +55,9 @@ namespace GitRepositoriesClone.API.Services
                 return null;
 
 
-            RepositoryValidator.Validate(request.Name, request.Description);
+            await _updateValidator.ValidateAndThrowAsync(request);
+
+            //  RepositoryValidator.Validate(request.Name, request.Description);
 
 
             repository.Name = request.Name;
