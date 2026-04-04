@@ -2,6 +2,7 @@
 using GitRepositoriesClone.API.Features.Repositories.Commands;
 using GitRepositoriesClone.API.Features.Repositories.Queries;
 using GitRepositoriesClone.API.Services;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
@@ -12,16 +13,13 @@ namespace GitRepositoriesClone.API.Controllers
     public class RepositoriesController : ControllerBase
     {
         private readonly IRepositoryService _service;
-        private readonly CreateRepositoryHandler _createHandler;
-        private readonly GetAllRepositoriesHandler _getAllHandler;
+        private readonly IMediator _mediator;
 
         public RepositoriesController( IRepositoryService service,
-            CreateRepositoryHandler createHandler,
-            GetAllRepositoriesHandler getAllHandler)
+            IMediator mediator)
         {
             _service = service;
-            _createHandler = createHandler;
-            _getAllHandler = getAllHandler;
+            _mediator = mediator;
         }
 
         
@@ -31,7 +29,9 @@ namespace GitRepositoriesClone.API.Controllers
         {
             //var repository = await _service.CreateAsync(request);
 
-            var result = await _createHandler.Handle(command);
+            //var result = await _createHandler.Handle(command);
+
+            var result = await _mediator.Send(command);
 
             return CreatedAtAction(nameof(GetById), new { id = result.Id }, result);
         }
@@ -43,7 +43,9 @@ namespace GitRepositoriesClone.API.Controllers
         {
             //var repositories = await _service.GetAllAsync();
 
-            var result = await _getAllHandler.Handle();
+            //var result = await _getAllHandler.Handle();
+
+            var result = await _mediator.Send(new GetAllRepositoriesQuery());
             return Ok(result);
         }
 
