@@ -1,4 +1,5 @@
 using FluentValidation;
+using GitRepositoriesClone.API.Behaviours;
 using GitRepositoriesClone.API.Data;
 using GitRepositoriesClone.API.Data.Dtos;
 using GitRepositoriesClone.API.Features.Repositories.Commands;
@@ -7,6 +8,7 @@ using GitRepositoriesClone.API.Middleware;
 using GitRepositoriesClone.API.Repositories;
 using GitRepositoriesClone.API.Services;
 using GitRepositoriesClone.API.Validators;
+using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Scalar.AspNetCore;
@@ -32,6 +34,8 @@ builder.Services.AddValidatorsFromAssemblyContaining<CreateRepositoryRequestVali
 
 builder.Services.AddMediatR(cfg =>
     cfg.RegisterServicesFromAssembly(typeof(Program).Assembly));
+
+builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehaviour<,>));
 
 
 builder.Services.AddControllers();

@@ -20,7 +20,7 @@ namespace GitRepositoriesClone.API.Features.Repositories.Commands
 
         public async Task<Repository> Handle(CreateRepositoryCommand request, CancellationToken cancellationToken)
         {
-            await _validator.ValidateAndThrowAsync(request, cancellationToken);
+           // await _validator.ValidateAndThrowAsync(request, cancellationToken);
 
             var repository = new Repository
             {

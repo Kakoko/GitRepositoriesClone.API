@@ -32,7 +32,7 @@ namespace GitRepositoriesClone.API.Middleware
                     error = ex.Message
                 });
             }
-            catch (FluentValidation.ValidationException ex)
+            catch (ValidationException ex)
             {
                 context.Response.StatusCode = StatusCodes.Status400BadRequest;
 
