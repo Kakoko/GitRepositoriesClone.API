@@ -11,5 +11,6 @@ namespace GitRepositoriesClone.API.Data
         }
 
         public DbSet<Repository> Repositories => Set<Repository>();
+        public DbSet<User> Users => Set<User>();
     }
 }

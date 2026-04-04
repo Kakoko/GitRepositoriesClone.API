@@ -3,6 +3,7 @@ using GitRepositoriesClone.API.Features.Repositories.Commands;
 using GitRepositoriesClone.API.Features.Repositories.Queries;
 using GitRepositoriesClone.API.Services;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
@@ -39,6 +40,7 @@ namespace GitRepositoriesClone.API.Controllers
 
         //READ (All)
         [HttpGet]
+        [Authorize]
         public async Task<IActionResult> GetAll()
         {
             //var repositories = await _service.GetAllAsync();
